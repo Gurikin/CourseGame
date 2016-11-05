@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+	<title>The GAME</title>
+    <script type='text/JavaScript'>
+		function refresh() {
+			location.reload(true);
+		}
+		function setClientTime() {
+			var currentDate = new Date();
+			var currentHour = currentDate.getHours();
+			var currentMinutes = currentDate.getMinutes();
+			var currentSeconds = currentDate.getSeconds();
+			if (currentMinutes < 10) {
+				currentMinutes = '0' + currentMinutes;
+			}
+			if (currentSeconds < 10) {
+				currentSeconds = '0' + currentSeconds;
+			}
+			var timeString = currentHour + ':' + currentMinutes + ':' + currentSeconds;
+			var clientTime = document.getElementById('ClientTime');
+			clientTime.appendChild(document.createTextNode(timeString));
+		}
+	</script>
+</head>
+<body onload='setInterval(function(){refresh()},1000);setClientTime();'>
+<form method='get'>
+<p id='ClientTime'>	Client time :     </p>
