@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.HandlerList;
 
-import ru.biv.msgSystem.Abonent;
-import ru.biv.msgSystem.MessageSystem;
+import ru.biv.base.Abonent;
+import ru.biv.base.MessageSystem;
 
 public interface Frontend extends Abonent {
 	public HandlerList getHandlers();

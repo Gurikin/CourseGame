@@ -1,12 +1,13 @@
 /**
  * 
  */
-package ru.biv.msgSystem;
+package ru.biv.accountService;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import ru.biv.base.*;
+import ru.biv.msgSystem.*;
 import ru.biv.utils.TimeHelper;
 
 /**
@@ -27,7 +28,7 @@ public class AccountServiceImpl implements Runnable, Abonent, AccountService{
 	 */
 	public AccountServiceImpl(MessageSystem ms) {
 		this.ms = ms;
-		this.address = new Address();
+		this.address = new AddressImpl();
 		ms.addService(this);
 		this.takeAccounter.put("Garry", 1);
 		this.takeAccounter.put("Molly", 2);
@@ -37,7 +38,7 @@ public class AccountServiceImpl implements Runnable, Abonent, AccountService{
 	public void run() {
 		while (true) {
 			ms.execForAbonent(this);
-			TimeHelper.sleep(3000);
+			//TimeHelper.sleep(6000);
 		}
 	}
 	
@@ -46,8 +47,8 @@ public class AccountServiceImpl implements Runnable, Abonent, AccountService{
 	}
 
 	@Override
-	public Address getAddress() {
-		return address;
+	public AddressImpl getAddress() {
+		return (AddressImpl) address;
 	}
 
 	public MessageSystem getMessageSystem() {

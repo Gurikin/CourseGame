@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.biv.msgSystem;
+package ru.biv.base;
 
 /**
  * @author Banshikov Igor (BIV)

@@ -8,14 +8,20 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import ru.biv.base.Abonent;
+import ru.biv.base.Address;
+import ru.biv.base.AddressService;
+import ru.biv.base.MessageSystem;
+import ru.biv.base.Msg;
+
 /**
  * @author Banshikov Igor (BIV)
  *
  */
-public class MessageSystem {
+public class MessageSystemImpl implements MessageSystem{
 	private Map<Address, ConcurrentLinkedQueue<Msg>> messages =
 			new HashMap<Address, ConcurrentLinkedQueue<Msg>>();
-	private AddressService addressService = new AddressService();
+	private AddressService addressService = new AddressServiceImpl();
 	
 	public void addService(Abonent abonent) {
 		addressService.setAddress(abonent);

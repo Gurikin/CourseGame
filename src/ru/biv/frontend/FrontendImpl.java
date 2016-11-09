@@ -21,6 +21,7 @@ import org.eclipse.jetty.server.session.SessionHandler;
 
 import ru.biv.msgSystem.*;
 import ru.biv.utils.TimeHelper;
+import ru.biv.accountService.AccountServiceImpl;
 //import ru.biv.accountService.AccountServiceImpl;
 import ru.biv.base.*;
 
@@ -32,14 +33,12 @@ import ru.biv.base.*;
 public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, Frontend {
 
 	private MessageSystem ms;
-	private Address address;
-	//private User user = new User();
-	private UserSession userSession = new UserSession();
-	User user = new User();
-	
+	private AddressImpl address;
+	private User user = new User();
+		
 	public FrontendImpl(MessageSystem ms) {
   	this.ms = ms;
-		this.address = new Address();
+		this.address = new AddressImpl();
 		ms.addService(this);
 		
   }
@@ -69,11 +68,11 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 	public void run() {
 		while(true) {
 			ms.execForAbonent(this);
-			TimeHelper.sleep(5000);
+			//TimeHelper.sleep(5000);
 		}			
 	}
 	
-	public Address getAddress() {
+	public AddressImpl getAddress() {
 		return address;
 	}
 	
@@ -84,8 +83,11 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
       HttpServletResponse response )
 			throws IOException, ServletException {
 		
+		UserSession userSession = new UserSession();
+		//User user = new User();
+		
 		HttpSession httpSession = request.getSession(true);
-		//userSession.setUserSession(user, httpSession);
+		userSession.setUserSession(user, httpSession);
 		//PrintWriter out = response.getWriter();
 
 		StringBuffer url = request.getRequestURL();
@@ -101,7 +103,7 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 
     // Inform jetty that this request has now been handled
     baseRequest.setHandled(true);
-    
+    		
     String name = request.getParameter("userName");
     Integer id = 0;
     if (name != null) {
@@ -109,8 +111,12 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
     }
     if (id != null) {
     	response.getWriter().println(PageGenerator.getPage(userSession));
+    	System.out.println(userSession.toString());
+      //System.out.println(user.toString());
     } else {
     	userSession.setUserSession(user, httpSession);
+      System.out.println(userSession.toString());
+      //System.out.println(user.toString());
     	response.getWriter().println(PageGenerator.getPage(userSession));
     	Address addressAS = ms.getAddressService().getAddress(AccountServiceImpl.class);
     	ms.sendMessage(new MsgGetUserId(getAddress(), addressAS, name));    	

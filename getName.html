@@ -21,6 +21,33 @@
 			var clientTime = document.getElementById('ClientTime');
 			clientTime.appendChild(document.createTextNode(timeString));
 		}
+		/*
+		** Функция возвращат объект XMLHttpRequest
+		*/
+		function getXmlHttpRequest()
+		{
+			if (window.XMLHttpRequest) 
+			{
+				try 
+				{
+					return new XMLHttpRequest();
+				} 
+				catch (e){}
+			} 
+			else if (window.ActiveXObject) 
+			{
+				try 
+				{
+					return new ActiveXObject('Msxml2.XMLHTTP');
+				} catch (e){}
+				try 
+				{
+					return new ActiveXObject('Microsoft.XMLHTTP');
+				} 
+				catch (e){}
+			}
+			return null;
+		}
 	</script>
 </head>
 <body onload='setClientTime();'>
@@ -30,3 +57,4 @@
 	<input type='submit' value='Запрос'></submit>
 </form>
 <form method='get'>
+<div id='ulresult'></div>

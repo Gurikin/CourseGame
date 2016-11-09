@@ -1,9 +1,12 @@
 /**
  * 
  */
-package ru.biv.msgSystem;
+package ru.biv.frontend;
 
-import ru.biv.frontend.FrontendImpl;
+import ru.biv.base.Address;
+import ru.biv.base.Frontend;
+import ru.biv.msgSystem.MsgToFrontend;
+
 
 /**
  * @author Banshikov Igor (BIV)
@@ -24,7 +27,7 @@ public class MsgUpdateUserId extends MsgToFrontend {
 	 * @see ru.biv.msgSystem.MsgToFrontend#exec(ru.biv.html.Frontend)
 	 */
 	@Override
-	public void exec(FrontendImpl frontend) {
+	public void exec(Frontend frontend) {
 		frontend.setUserId(name, userId);
 	}
 

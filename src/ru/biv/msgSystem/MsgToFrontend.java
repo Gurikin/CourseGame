@@ -3,7 +3,11 @@
  */
 package ru.biv.msgSystem;
 
-import ru.biv.frontend.FrontendImpl;
+import ru.biv.base.Abonent;
+import ru.biv.base.Address;
+import ru.biv.base.Frontend;
+import ru.biv.base.Msg;
+
 
 /**
  * @author Banshikov Igor (BIV)
@@ -19,10 +23,10 @@ public abstract class MsgToFrontend extends Msg {
 	 */
 	@Override
 	public void exec(Abonent abonent) {
-		if(abonent instanceof FrontendImpl) {
-			exec((FrontendImpl)abonent);
+		if(abonent instanceof Frontend) {
+			exec((Frontend)abonent);
 		}
 	}
 	
-	public abstract void exec(FrontendImpl frontend);
+	public abstract void exec(Frontend frontend);
 }

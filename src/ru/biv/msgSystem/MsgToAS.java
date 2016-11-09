@@ -3,6 +3,11 @@
  */
 package ru.biv.msgSystem;
 
+import ru.biv.base.Abonent;
+import ru.biv.base.AccountService;
+import ru.biv.base.Address;
+import ru.biv.base.Msg;
+
 //import ru.biv.accountService.AccountServiceImpl;
 
 /**
@@ -25,11 +30,11 @@ public abstract class MsgToAS extends Msg {
 	 */
 	@Override
 	public void exec(Abonent abonent) {
-		if(abonent instanceof AccountServiceImpl) {
-			exec((AccountServiceImpl)abonent);
+		if(abonent instanceof AccountService) {
+			exec((AccountService)abonent);
 		}
 	}
 	
-	public abstract void exec(AccountServiceImpl accountService);
+	public abstract void exec(AccountService accountService);
 
 }

@@ -30,13 +30,14 @@ public class PageGenerator {
     }
     		
     public static String getPage(UserSession userSession) throws FileNotFoundException {
-    	if (userSession.getAuth() == "DONT_AUTH") {
+    	if (userSession.getAuth() == "START") {
     		return getUserNamePage("<h2>Input your nick, please.</h2>");
     	}
     	if (userSession.getAuth() == "AUTH") {
     		return getIndexPage("<h1>User name: " + userSession.getUser().getName() + " Id: " + userSession.getUser().getId(userSession.getUser().getName()) + " SessionId: " + userSession.getSession().getId() + "</h1>");
     	} else {
-    		return getWaitPage("<h2>Авторизация уже на подходе. Your SessionId: " + userSession.getSession().getId() + "</h2>");
+    		return getUserNamePage("<h2>Input your nick, please. Your session id: " + userSession.getSession().getId() + "</h2>");
+    		//return getWaitPage("<h2>Авторизация уже на подходе. Your SessionId: " + userSession.getSession().getId() + "</h2>");
     	}
     	/*if (user.getId(user.getUserName()) == (-1)) {
     		return getUserNamePage("<h2>Input your nick, please.</h2>");

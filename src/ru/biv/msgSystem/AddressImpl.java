@@ -5,15 +5,17 @@ package ru.biv.msgSystem;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import ru.biv.base.Address;
+
 /**
  * @author Banshikov Igor (BIV)
  *
  */
-public class Address {
+public class AddressImpl implements Address{
 	static private AtomicInteger abonentIdCreator = new AtomicInteger();
 	final private int abonentId;
 	
-	public Address(){
+	public AddressImpl(){
 		this.abonentId = abonentIdCreator.incrementAndGet();
 	}
 	

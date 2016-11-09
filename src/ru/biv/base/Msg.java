@@ -1,7 +1,10 @@
 /**
  * 
  */
-package ru.biv.msgSystem;
+package ru.biv.base;
+
+import ru.biv.base.Address;
+import ru.biv.base.Abonent;
 
 /**
  * @author Banshikov Igor (BIV)
@@ -16,11 +19,11 @@ public abstract class Msg {
 		this.to = to;
 	}
 	
-	protected Address getFrom(){
+	public Address getFrom(){
 		return from;
 	}
 	
-	protected Address getTo(){
+	public Address getTo(){
 		return to;
 	}
 	

@@ -6,6 +6,7 @@ package ru.biv.main;
 import org.eclipse.jetty.server.Server;
 //import org.eclipse.jetty.server.ServerConnector;
 
+import ru.biv.accountService.AccountServiceImpl;
 //import ru.biv.accountService.AccountServiceImpl;
 import ru.biv.base.*;
 import ru.biv.frontend.FrontendImpl;
@@ -18,7 +19,7 @@ import ru.biv.msgSystem.*;
 public class Main {
 
 	public static void main(String[] args) throws InterruptedException, Exception {
-		MessageSystem ms = new MessageSystem();
+		MessageSystem ms = new MessageSystemImpl();
 		
 		Frontend frontend = new FrontendImpl(ms);
 		AccountService accountService = new AccountServiceImpl(ms);

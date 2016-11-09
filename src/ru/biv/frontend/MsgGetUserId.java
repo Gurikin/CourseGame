@@ -1,9 +1,11 @@
 /**
  * 
  */
-package ru.biv.msgSystem;
+package ru.biv.frontend;
 
-//import ru.biv.accountService.AccountServiceImpl;
+import ru.biv.base.AccountService;
+import ru.biv.base.Address;
+import ru.biv.msgSystem.*;
 
 /**
  * @author Banshikov Igor (BIV)
@@ -23,7 +25,7 @@ public class MsgGetUserId extends MsgToAS {
 	}
 
 	@Override
-	public void exec(AccountServiceImpl accountService) {
+	public void exec(AccountService accountService) {
 		Integer userId = accountService.getUserId(this.name);
 		accountService.getMessageSystem().sendMessage(new MsgUpdateUserId(getTo(), getFrom(), this.name, userId));
 	}
