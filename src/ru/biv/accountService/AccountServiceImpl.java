@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.biv.base.*;
-import ru.biv.msgSystem.*;
 import ru.biv.utils.TimeHelper;
 
 /**
@@ -28,7 +27,7 @@ public class AccountServiceImpl implements Runnable, Abonent, AccountService{
 	 */
 	public AccountServiceImpl(MessageSystem ms) {
 		this.ms = ms;
-		this.address = new AddressImpl();
+		this.address = new Address();
 		ms.addService(this);
 		this.takeAccounter.put("Garry", 1);
 		this.takeAccounter.put("Molly", 2);
@@ -47,8 +46,8 @@ public class AccountServiceImpl implements Runnable, Abonent, AccountService{
 	}
 
 	@Override
-	public AddressImpl getAddress() {
-		return (AddressImpl) address;
+	public Address getAddress() {
+		return address;
 	}
 
 	public MessageSystem getMessageSystem() {

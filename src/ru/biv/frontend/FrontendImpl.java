@@ -33,12 +33,12 @@ import ru.biv.base.*;
 public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, Frontend {
 
 	private MessageSystem ms;
-	private AddressImpl address;
+	private Address address;
 	private User user = new User();
 		
 	public FrontendImpl(MessageSystem ms) {
   	this.ms = ms;
-		this.address = new AddressImpl();
+		this.address = new Address();
 		ms.addService(this);
 		
   }
@@ -72,7 +72,7 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 		}			
 	}
 	
-	public AddressImpl getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 	
@@ -104,22 +104,22 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
     // Inform jetty that this request has now been handled
     baseRequest.setHandled(true);
     		
+    Integer id = null;
     String name = request.getParameter("userName");
-    Integer id = 0;
     if (name != null) {
     	id = user.getId(name);
+    	userSession.setUserSession(user, httpSession);
     }
     if (id != null) {
-    	response.getWriter().println(PageGenerator.getPage(userSession));
+    	userSession.setUserSession(user, httpSession);
     	System.out.println(userSession.toString());
-      //System.out.println(user.toString());
+    	response.getWriter().println(PageGenerator.getPage(userSession));
     } else {
+    	Address addressAS = ms.getAddressService().getAddress(AccountServiceImpl.class);
+    	ms.sendMessage(new MsgGetUserId(getAddress(), addressAS, name));
     	userSession.setUserSession(user, httpSession);
       System.out.println(userSession.toString());
-      //System.out.println(user.toString());
     	response.getWriter().println(PageGenerator.getPage(userSession));
-    	Address addressAS = ms.getAddressService().getAddress(AccountServiceImpl.class);
-    	ms.sendMessage(new MsgGetUserId(getAddress(), addressAS, name));    	
     }
 	}
 	

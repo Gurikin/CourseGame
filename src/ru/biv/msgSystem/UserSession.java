@@ -29,22 +29,28 @@ public class UserSession {
 	}
 	
 	public String getAuth () {
+		if (session == null & user == null) {
+			return auth.START.toString();
+		}
 		if (session != null & user != null) {
+			if ((user.getName() == null || user.getName() == "") & user.getId(user.getName()) == null) {
+				return auth.START.toString();
+			}
 			if (user.getName() != null & user.getId(user.getName()) == null) {
 				user.clear();
-				return auth.AUTHORIZATING.toString();
-			}
-			if (user.getName() == null) {
 				return auth.DONT_AUTH.toString();
+			}
+			if (user.getName() == null || user.getName() == "") {
+				return auth.START.toString();
 			}
 			if (user.getId(user.getName()) != null) {
 				return auth.AUTH.toString();
 			} else {
-				return auth.START.toString();
+				user.clear();
+				return auth.DONT_AUTH.toString();
 			}			
-		} else {
-			return auth.START.toString();
-		}		
+		}
+		return auth.START.toString();
 	}
 	
 	public String toString() {

@@ -6,6 +6,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 	<title>The GAME</title>
     <script type='text/JavaScript'>
+		// Очистка списка
 		function setClientTime() {
 			var currentDate = new Date();
 			var currentHour = currentDate.getHours();
@@ -48,13 +49,48 @@
 			}
 			return null;
 		}
+		function clearList()
+		{
+			var divResult = document.getElementById("divResult");
+			while (divResult.hasChildNodes())
+				divResult.removeChild(divResult.lastChild);
+		}
+
+		// Добавление нового элемента списка
+		function addListItem(text)
+		{
+			if (text.length == 0) return;
+			var divResult = document.getElementById("divResult");
+			var h2 = document.createElement("h2");
+			var h2Text = document.createTextNode(text);
+			h2.appendChild(h2Text);
+			divResult.appendChild(h2);
+		}
+
+		// Запрос данных
+		function showBooks()
+		{
+			var req = getXmlHttpRequest();
+			req.onreadystatechange = function()
+				{
+					if (req.readyState != 4) return;
+					var responseText = new String(req.responseText);
+					var resp = responseText;//.split('\n');
+					clearList();
+					addListItem(resp);
+				}
+			var txtCat = document.getElementById("txtCat");
+			req.open("GET", "http://localhost:8080?userName=" + txtCat.value, true);
+			req.send(null);//<input id='txtCat' type='text' name='userName'></input>
+		}
 	</script>
 </head>
 <body onload='setClientTime();'>
 <p id='ClientTime'>	Client time :     </p>
-<form method='post'>
-	<input type='text' name='userName'></input>
-	<input type='submit' value='Запрос'></submit>
+<form onsubmit='return false'>
+	<input id='txtCat' type='text'></input>
+	<button onclick='showBooks()'>Запрос</button>
+	<!-- <input type='submit' value='Запрос'></input> -->
 </form>
 <form method='get'>
-<div id='ulresult'></div>
+<div id='divResult'>
