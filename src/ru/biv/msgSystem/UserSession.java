@@ -3,61 +3,66 @@ package ru.biv.msgSystem;
 import java.util.*;
 import java.util.Map.Entry;
 
-import javax.servlet.http.HttpSession;
-
 public class UserSession {
-	private Map<HttpSession, User> sessionToUser = new HashMap<HttpSession, User>();
-	private User user;
-	private HttpSession session;
-	enum auth {AUTHORIZATING, AUTH, DONT_AUTH, START};
+	private Map<String, Integer> user = new HashMap<String, Integer>();
+	private enum auth {AUTHORIZATING, AUTH, DONT_AUTH, START};
 		
 	public UserSession() {
+		userClear();
 	}
 	
-	public void setUserSession(User user, HttpSession session) {
-		sessionToUser.put(session, user);
-		this.user = user;
-		this.session = session;
-	}
-
-	public User getUser() {
-		return this.user;
+	public void setUserSession(String userName, Integer userId) {
+		userClear();
+		user.put(userName, userId);
 	}
 	
-	public HttpSession getSession() {
-		return this.session;
+	public Map<String, Integer> getUser() {
+		return user;
 	}
 	
-	public String getAuth () {
-		if (session == null & user == null) {
-			return auth.START.toString();
+	public Integer getUserId(String userName){
+		return user.get(userName);
+	}
+	
+	public String getUserName() {
+		String userName = "";
+		for (Entry<String, Integer> entry : user.entrySet()) {
+			userName = entry.getKey();
 		}
-		if (session != null & user != null) {
-			if ((user.getName() == null || user.getName() == "") & user.getId(user.getName()) == null) {
-				return auth.START.toString();
-			}
-			if (user.getName() != null & user.getId(user.getName()) == null) {
-				user.clear();
-				return auth.DONT_AUTH.toString();
-			}
-			if (user.getName() == null || user.getName() == "") {
-				return auth.START.toString();
-			}
-			if (user.getId(user.getName()) != null) {
-				return auth.AUTH.toString();
-			} else {
-				user.clear();
-				return auth.DONT_AUTH.toString();
-			}			
-		}
-		return auth.START.toString();
+		return userName;
 	}
 	
-	public String toString() {
+	public String getAuth() {
+		if (this.getUserName() == null & this.user.get(this.getUserName()) == null) {
+			return "";
+		}
+		if (this.user.get(this.getUserName()) == null) {
+			return auth.AUTHORIZATING.toString(); 
+		}
+		if (this.user.get(this.getUserName()) == 0) {
+			return auth.DONT_AUTH.toString(); 
+		}
+		if (this.user.get(this.getUserName()) != null) {
+			return auth.AUTH.toString(); 
+		} else {
+			return ""; 
+		}		
+	}
+	
+	public void userClear() {
+		user.clear();
+	}
+	
+	/*public String toString() {
 		String result = "";
-		for( Entry<HttpSession, User> entry : sessionToUser.entrySet() ){
-			result += "Session: " + entry.getKey().getId() + "\nUser: " + entry.getValue().toString() + "\n";
+		for (Entry<String, Integer> entry : user.entrySet()) {
+			if (entry.getKey() != null) {
+				result += "UserName: " + entry.getKey(); 
+			}
+			if (entry.getValue().toString() != null) {
+				result += "\nUserID: " + entry.getValue().toString() + "\n";
+			}
 		}
 		return result;
-	}
+	}*/
 }

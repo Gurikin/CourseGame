@@ -6,6 +6,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 	<title>The GAME</title>
     <script type='text/JavaScript'>
+	
 		// Очистка списка
 		function setClientTime() {
 			var currentDate = new Date();
@@ -20,7 +21,7 @@
 			}
 			var timeString = currentHour + ':' + currentMinutes + ':' + currentSeconds;
 			var clientTime = document.getElementById('ClientTime');
-			clientTime.appendChild(document.createTextNode(timeString));
+			clientTime.firstChild.nodeValue = timeString;//(document.createTextNode(timeString));
 		}
 		/*
 		** Функция возвращат объект XMLHttpRequest
@@ -68,7 +69,7 @@
 		}
 
 		// Запрос данных
-		function showBooks()
+		function showResult()
 		{
 			var req = getXmlHttpRequest();
 			req.onreadystatechange = function()
@@ -79,18 +80,38 @@
 					clearList();
 					addListItem(resp);
 				}
-			var txtCat = document.getElementById("txtCat");
-			req.open("GET", "http://localhost:8080?userName=" + txtCat.value, true);
-			req.send(null);//<input id='txtCat' type='text' name='userName'></input>
+			//var uName = document.getElementById("uName");
+			req.open("GET", "http://localhost:8080?userName=" + uName.value, true);
+			req.send(null);
+		}
+		
+		function sendRequest()
+		{
+			var req = getXmlHttpRequest();
+			req.onreadystatechange = function()
+				{
+					if (req.readyState != 4) return;
+					var responseText = new String(req.responseText);
+					var resp = responseText;//.split('\n');
+					clearList();
+					addListItem(resp);
+				}
+			uName = document.getElementById("uName");
+			req.open("GET", "http://localhost:8080?userName=" + uName.value, true);
+			req.send(null);
+		}
+		
+		/*window.onload = function() {
+			setInterval("setClientTime();showResult();", 1000);//showBooks()
+		}*/
+		
+		function refresh() {
+			setInterval("showResult();", 1000);
 		}
 	</script>
 </head>
-<body onload='setClientTime();'>
+<body onload='setInterval("setClientTime();",1000)'>
 <p id='ClientTime'>	Client time :     </p>
-<form onsubmit='return false'>
-	<input id='txtCat' type='text'></input>
-	<button onclick='showBooks()'>Запрос</button>
-	<!-- <input type='submit' value='Запрос'></input> -->
-</form>
-<form method='get'>
+<input id='uName' type='text'></input>
+<button id='inOutButton' onclick='sendRequest();refresh()'>Login</button>
 <div id='divResult'>

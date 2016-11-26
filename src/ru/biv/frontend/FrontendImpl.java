@@ -4,6 +4,8 @@
 package ru.biv.frontend;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +36,9 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 
 	private MessageSystem ms;
 	private Address address;
-	private User user = new User();
+	private Map<HttpSession, UserSession> sessionIdToSession = new HashMap<HttpSession, UserSession>();
+	private HttpSession httpSession;
+	private UserSession userSession;
 		
 	public FrontendImpl(MessageSystem ms) {
   	this.ms = ms;
@@ -59,7 +63,6 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 
 		 // Add the ResourceHandler to the server.
 		 HandlerList handlers = new HandlerList();
-		 //handlers.setHandlers(new Handler[] { resource_handler, new Frontend() });
 		 handlers.setHandlers(new Handler[]{resource_handler, new SessionHandler(sessionManager), this});
 		 return handlers;
 	}
@@ -68,7 +71,7 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 	public void run() {
 		while(true) {
 			ms.execForAbonent(this);
-			//TimeHelper.sleep(5000);
+			TimeHelper.sleep(150);
 		}			
 	}
 	
@@ -83,13 +86,12 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
       HttpServletResponse response )
 			throws IOException, ServletException {
 		
-		UserSession userSession = new UserSession();
-		//User user = new User();
-		
-		HttpSession httpSession = request.getSession(true);
-		userSession.setUserSession(user, httpSession);
-		//PrintWriter out = response.getWriter();
-
+		this.httpSession = request.getSession(true);
+		if (this.sessionIdToSession.get(httpSession) == null) {
+			userSession = new UserSession();
+			this.sessionIdToSession.put(httpSession, userSession);
+			response.getWriter().println(PageGenerator.getStartPage(httpSession));
+		}		
 		StringBuffer url = request.getRequestURL();
 
 		httpSession.setAttribute("URL", url);
@@ -106,25 +108,24 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
     		
     Integer id = null;
     String name = request.getParameter("userName");
+    System.out.println("Имя: "+name+"    ");
     if (name != null) {
-    	id = user.getId(name);
-    	userSession.setUserSession(user, httpSession);
+    	id = sessionIdToSession.get(httpSession).getUserId(name);
+    	System.out.println("userId: "+id);
     }
+    sessionIdToSession.get(httpSession).setUserSession(name, id);
     if (id != null) {
-    	userSession.setUserSession(user, httpSession);
-    	System.out.println(userSession.toString());
-    	response.getWriter().println(PageGenerator.getPage(userSession));
+    	response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));
     } else {
     	Address addressAS = ms.getAddressService().getAddress(AccountServiceImpl.class);
     	ms.sendMessage(new MsgGetUserId(getAddress(), addressAS, name));
-    	userSession.setUserSession(user, httpSession);
-      System.out.println(userSession.toString());
-    	response.getWriter().println(PageGenerator.getPage(userSession));
+    	response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));
     }
 	}
 	
+	
 	public void setUserId(String userName, Integer userId) {
-		user.setUserNameToId(userName, userId);
+		sessionIdToSession.get(httpSession).setUserSession(userName, userId);
 	}
 	
 	public MessageSystem getMessageSystem() {

@@ -37,12 +37,18 @@ public class AccountServiceImpl implements Runnable, Abonent, AccountService{
 	public void run() {
 		while (true) {
 			ms.execForAbonent(this);
-			//TimeHelper.sleep(6000);
+			TimeHelper.sleep(10000);
 		}
 	}
 	
 	public Integer getUserId (String userName){
-		return takeAccounter.get(userName);
+		if (takeAccounter.get(userName) != null) {
+			return takeAccounter.get(userName);
+		} else {
+			return 0;
+		}
+		
+		
 	}
 
 	@Override

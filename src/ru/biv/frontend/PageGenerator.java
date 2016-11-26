@@ -6,6 +6,8 @@ package ru.biv.frontend;
 import java.io.*;
 import java.util.*;
 
+import javax.servlet.http.HttpSession;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -28,33 +30,29 @@ public class PageGenerator {
     	DateFormat formatter = new SimpleDateFormat("HH.mm.ss");
     	return formatter.format(date);
     }
-    		
-    public static String getPage(UserSession userSession) throws FileNotFoundException {
-    	String auth = "";
+    
+    public static String getStartPage(HttpSession httpSession) throws FileNotFoundException {
+    	String response = "";
+    	response = getUserNamePage("<h2>Input your nick, please. Your session id: " + httpSession.getId() + "</h2>");
+  		return response;
+    }
+    
+    public static String getPage(HttpSession httpSession, UserSession userSession) throws FileNotFoundException {
+    	String response = "";
+    	/*if (userSession == null || userSession.getAuth() == "START") {
+    		response = getUserNamePage("<h2>Input your nick, please. Your session id: " + httpSession.getId() + "</h2>");
+    		return response;
+    	}*/ 
     	if (userSession.getAuth() == "DONT_AUTH") {
-    		auth = "К сожалению такого пользователя мы не нашли. Хотите зарегестрироваться?";
-    		//userSession.getUser().clear();
+    		response = "К сожалению такого пользователя мы не нашли. Хотите зарегестрироваться?";
     	}
     	if (userSession.getAuth() == "AUTH") {
-    		//return getUserNamePage("<h1>User name: " + userSession.getUser().getName() + " Id: " + userSession.getUser().getId(userSession.getUser().getName()) + " SessionId: " + userSession.getSession().getId() + "</h1>");
-    		//return "<h1>User name: " + userSession.getUser().getName() + " Id: " + userSession.getUser().getId(userSession.getUser().getName()) + " SessionId: " + userSession.getSession().getId() + "</h1>";
-    		auth = "User name: " + userSession.getUser().getName() + " Id: " + userSession.getUser().getId(userSession.getUser().getName()) + " SessionId: " + userSession.getSession().getId();
-    	} 
-    	if (userSession.getAuth() == "START") {
-    		//return getUserNamePage("<h2>Input your nick, please.</h2>");
-    		//return "<h2>Input your nick, please.</h2>";
-    		auth = getUserNamePage("<h2>Input your nick, please. Your session id: " + userSession.getSession().getId() + "</h2>");
-    		//return "Input your nick, please.";
+    		response = "User name: " + userSession.getUserName() + " Id: " + userSession.getUserId(userSession.getUserName()) + " SessionId: " + httpSession.getId();
     	} 
     	if (userSession.getAuth() == "AUTHORIZATING") {
-    		auth = "Авторизация уже на подходе. Your SessionId: " + userSession.getSession().getId();
-    		//userSession.getUser().clear();
+    		response = "Авторизация уже на подходе. Your SessionId: " + httpSession.getId();
     	} 
-    	return auth;
-    	/*if (user.getId(user.getUserName()) == (-1)) {
-    		return getUserNamePage("<h2>Input your nick, please.</h2>");
-    	}
-    	return getWaitPage("<h2>Авторизация уже на подходе. Your SessionId: " + httpSession.getId() + "</h2>");*/
+    	return response;
     }
     
     private static String getUserNamePage(String body) throws FileNotFoundException{
@@ -64,7 +62,7 @@ public class PageGenerator {
     	//return result;
     }
     
-    private static String getWaitPage(String body) throws FileNotFoundException{
+    /*private static String getWaitPage(String body) throws FileNotFoundException{
     	//System.out.println(FileWorker.read("index.html") + getTime() + pagePart1);PageGenerator.getTime()
     	//String servTime = getTime();
     	return FileWorker.read("wait.html") + body + PAGE_END;
@@ -75,5 +73,5 @@ public class PageGenerator {
     	//String servTime = getTime();
     	return FileWorker.read("index.html") + body + PAGE_END;
     	//return result;
-    }
+    }*/
 }
