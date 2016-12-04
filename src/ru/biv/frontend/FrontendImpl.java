@@ -86,9 +86,7 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
       HttpServletResponse response )
 			throws IOException, ServletException {
 		
-		System.out.println(baseRequest.toString());
-		System.out.println(request.toString());
-		System.out.println(request.getContentType());
+		
 		this.httpSession = request.getSession(true);
 		if (this.sessionIdToSession.get(httpSession) == null) {
 			userSession = new UserSession();
