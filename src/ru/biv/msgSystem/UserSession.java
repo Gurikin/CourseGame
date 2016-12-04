@@ -33,7 +33,7 @@ public class UserSession {
 	}
 	
 	public String getAuth() {
-		if (this.getUserName() == null & this.user.get(this.getUserName()) == null) {
+		if (this.getUserName() == null && this.user.get(this.getUserName()) == null) {
 			return "";
 		}
 		if (this.user.get(this.getUserName()) == null) {
