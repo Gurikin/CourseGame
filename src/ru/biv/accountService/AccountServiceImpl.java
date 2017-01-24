@@ -31,6 +31,7 @@ public class AccountServiceImpl implements Runnable, Abonent, AccountService{
 		ms.addService(this);
 		this.takeAccounter.put("Garry", 1);
 		this.takeAccounter.put("Molly", 2);
+		this.takeAccounter.put("g", 3);
 	}
 	
 	@Override

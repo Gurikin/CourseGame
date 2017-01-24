@@ -10,6 +10,7 @@ import ru.biv.accountService.AccountServiceImpl;
 //import ru.biv.accountService.AccountServiceImpl;
 import ru.biv.base.*;
 import ru.biv.frontend.FrontendImpl;
+import ru.biv.frontend.FrontendObject;
 import ru.biv.msgSystem.*;
 
 /**
@@ -21,7 +22,7 @@ public class Main {
 	public static void main(String[] args) throws InterruptedException, Exception {
 		MessageSystem ms = new MessageSystemImpl();
 		
-		Frontend frontend = new FrontendImpl(ms);
+		Frontend frontend = new FrontendObject(ms);
 		AccountService accountService = new AccountServiceImpl(ms);
 		
 		new Thread((Runnable) frontend).start();

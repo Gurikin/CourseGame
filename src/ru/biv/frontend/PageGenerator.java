@@ -31,18 +31,20 @@ public class PageGenerator {
     	return formatter.format(date);
     }
     
-    public static String getStartPage(HttpSession httpSession) throws FileNotFoundException {
+    /*public static String getStartPage(HttpSession httpSession) throws FileNotFoundException {
     	String response = "";
     	response = getUserNamePage("<h2>Input your nick, please. Your session id: " + httpSession.getId() + "</h2>");
+  		return response;
+    }*/
+    
+    public static String getStartPage(HttpSession httpSession) throws FileNotFoundException {
+    	String response = "";
+    	response = "Input your nick, please. Your session id: " + httpSession.getId();
   		return response;
     }
     
     public static String getPage(HttpSession httpSession, UserSession userSession) throws FileNotFoundException {
     	String response = "";
-    	/*if (userSession == null || userSession.getAuth() == "START") {
-    		response = getUserNamePage("<h2>Input your nick, please. Your session id: " + httpSession.getId() + "</h2>");
-    		return response;
-    	}*/ 
     	if (userSession.getAuth() == "DONT_AUTH") {
     		response = "К сожалению такого пользователя мы не нашли. Хотите зарегестрироваться?";
     	}

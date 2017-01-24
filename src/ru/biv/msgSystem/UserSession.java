@@ -1,9 +1,11 @@
 package ru.biv.msgSystem;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class UserSession {
+//@SuppressWarnings("serial")
+public class UserSession implements Serializable{
 	private Map<String, Integer> user = new HashMap<String, Integer>();
 	private enum auth {AUTHORIZATING, AUTH, DONT_AUTH, START};
 		

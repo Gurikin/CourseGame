@@ -7,12 +7,17 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.eclipse.jetty.http.HttpCookie;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.SessionManager;
@@ -33,7 +38,7 @@ import ru.biv.base.*;
  * @author Игорь
  *
  */
-public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, Frontend {
+public class FrontendJSON extends AbstractHandler implements Runnable, Abonent, Frontend {
 
 	private MessageSystem ms;
 	private Address address;
@@ -42,7 +47,7 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 	private UserSession userSession;
 	private static final String LOGIN_URL = "/hello";
 		
-	public FrontendImpl(MessageSystem ms) {
+	public FrontendJSON(MessageSystem ms) {
   	this.ms = ms;
 		this.address = new Address();
 		ms.addService(this);
@@ -94,14 +99,26 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 			userSession = new UserSession();
 			this.sessionIdToSession.put(httpSession, userSession);
 			//response.getWriter().println(PageGenerator.getStartPage(httpSession));
-		}		
+		}
 		StringBuffer url = request.getRequestURL();
 
+		try (InputStream inputStream = request.getInputStream();
+        JsonReader jsonReader = Json.createReader(inputStream)) {
+        JsonObject responseObj = jsonReader.readObject();
+        JsonArray responseResults = responseObj.getJsonArray("data");
+        for (JsonObject responseResult : responseResults.getValuesAs(JsonObject.class)) {
+            System.out.println(responseResult.toString());
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+		
+		// Set httpSession settings
 		httpSession.setAttribute("URL", url);
-		httpSession.setMaxInactiveInterval(60*15); //time inactive in seconds
+		httpSession.setMaxInactiveInterval(60*15); // seconds
 		
 		// Declare response encoding and types
-    response.setContentType("text/html; charset=utf-8");
+    response.setContentType("application/json");
 
     // Declare response status code
     response.setStatus(HttpServletResponse.SC_OK);
@@ -131,19 +148,16 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
     }
     sessionIdToSession.get(httpSession).setUserSession(name, id);
     if (id != null) {
-    	//authCookie = new Cookie("userAuth", "allRight");
-    	//response.addCookie(authCookie);
-    	response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));    	
+    	response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));
+    	
     } else {
     	Address addressAS = ms.getAddressService().getAddress(AccountServiceImpl.class);
     	ms.sendMessage(new MsgGetUserId(getAddress(), addressAS, name));
-    	//authCookie = new Cookie("userAuth", "allBad");
     	if (name != null) {
     		response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));
     	} else {
     		response.getWriter().println(PageGenerator.getStartPage(httpSession));
-    	}
-    	
+    	}    	
     }
 	}
 	
