@@ -25,32 +25,34 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import ru.biv.msgSystem.*;
 import ru.biv.utils.TimeHelper;
 import ru.biv.accountService.AccountServiceImpl;
-//import ru.biv.accountService.AccountServiceImpl;
 import ru.biv.base.*;
+import ru.biv.gameMechanic.GameMechanicImpl;
+import ru.biv.gameMechanic.MsgStartGameSession;
 
 
 /**
- * @author Игорь
+ * @author Banchikov Igor Vladimirovich
  *
  */
 public class FrontendObject extends AbstractHandler implements Runnable, Abonent, Frontend {
 
 	private MessageSystem ms;
 	private Address address;
+	
 	private Map<HttpSession, UserSession> sessionIdToSession = new HashMap<HttpSession, UserSession>();
 	private HttpSession httpSession;
 	private UserSession responseUserSession;
 	private UserSession requestUserSession = new UserSession();
+	
 	private static final String LOGIN_URL = "/hello";
 	
 	ObjectInputStream objectInputStream;
 	ObjectOutputStream objectOutputStream;
-		
+	
 	public FrontendObject(MessageSystem ms) {
   	this.ms = ms;
 		this.address = new Address();
-		ms.addService(this);
-		
+		ms.addService(this);		
   }
 	
 	public HandlerList getHandlers() {
@@ -77,7 +79,7 @@ public class FrontendObject extends AbstractHandler implements Runnable, Abonent
 	public void run() {
 		while(true) {
 			ms.execForAbonent(this);
-			TimeHelper.sleep(150);
+			TimeHelper.sleep(1000);
 		}			
 	}
 	
@@ -96,7 +98,6 @@ public class FrontendObject extends AbstractHandler implements Runnable, Abonent
 			objectInputStream = new ObjectInputStream(request.getInputStream());
 			requestUserSession = (UserSession) objectInputStream.readObject();
 		} catch(ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			objectInputStream.close();
@@ -106,7 +107,6 @@ public class FrontendObject extends AbstractHandler implements Runnable, Abonent
 		if (this.sessionIdToSession.get(httpSession) == null) {
 			responseUserSession = new UserSession();
 			this.sessionIdToSession.put(httpSession, responseUserSession);
-			//response.getWriter().println(PageGenerator.getStartPage(httpSession));
 		}		
 		StringBuffer url = request.getRequestURL();
 				
@@ -134,41 +134,32 @@ public class FrontendObject extends AbstractHandler implements Runnable, Abonent
       }
     }   
 
-    //Cookie authCookie;
     Integer id = null;
     String name = requestUserSession.getUserName();
-    //String name = request.getParameter("userName");
     System.out.println("Имя: "+name+"    ");
     if (name != null) {
     	id = sessionIdToSession.get(httpSession).getUserId(name);
     	System.out.println("userId: "+id);
     }
-    sessionIdToSession.get(httpSession).setUserSession(name, id);
+    sessionIdToSession.get(httpSession).setUser(name, id);
     objectOutputStream = new ObjectOutputStream(response.getOutputStream());        
     if (id != null) {
-    	//authCookie = new Cookie("userAuth", "allRight");
-    	//response.addCookie(authCookie);
-    	//response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));
+    	Address addressGM = ms.getAddressService().getAddress(GameMechanicImpl.class);
+    	ms.sendMessage(new MsgStartGameSession(getAddress(), addressGM, id));
     	objectOutputStream.writeObject(sessionIdToSession.get(httpSession));
     	objectOutputStream.flush();
     	objectOutputStream.close();
     } else {
     	Address addressAS = ms.getAddressService().getAddress(AccountServiceImpl.class);
     	ms.sendMessage(new MsgGetUserId(getAddress(), addressAS, name));
-    	//authCookie = new Cookie("userAuth", "allBad");
-    	/*if (name != null) {
-    		response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));    		
-    	} else {
-    		response.getWriter().println(PageGenerator.getStartPage(httpSession));
-    	}*/
     	objectOutputStream.writeObject(sessionIdToSession.get(httpSession));
     	objectOutputStream.flush();
-    	objectOutputStream.close();    	
+    	objectOutputStream.close();
     }
-  }	
+  }
 	
 	public void setUserId(String userName, Integer userId) {
-		sessionIdToSession.get(httpSession).setUserSession(userName, userId);
+		sessionIdToSession.get(httpSession).setUser(userName, userId);
 	}
 	
 	public MessageSystem getMessageSystem() {

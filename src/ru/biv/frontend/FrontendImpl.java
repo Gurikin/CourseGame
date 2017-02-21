@@ -93,7 +93,6 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 		if (this.sessionIdToSession.get(httpSession) == null) {
 			userSession = new UserSession();
 			this.sessionIdToSession.put(httpSession, userSession);
-			//response.getWriter().println(PageGenerator.getStartPage(httpSession));
 		}		
 		StringBuffer url = request.getRequestURL();
 
@@ -121,7 +120,6 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
       }
     }   
 
-    //Cookie authCookie;
     Integer id = null;
     String name = request.getParameter("userName");
     System.out.println("Имя: "+name+"    ");
@@ -129,15 +127,12 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
     	id = sessionIdToSession.get(httpSession).getUserId(name);
     	System.out.println("userId: "+id);
     }
-    sessionIdToSession.get(httpSession).setUserSession(name, id);
+    sessionIdToSession.get(httpSession).setUser(name, id);
     if (id != null) {
-    	//authCookie = new Cookie("userAuth", "allRight");
-    	//response.addCookie(authCookie);
     	response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));    	
     } else {
     	Address addressAS = ms.getAddressService().getAddress(AccountServiceImpl.class);
     	ms.sendMessage(new MsgGetUserId(getAddress(), addressAS, name));
-    	//authCookie = new Cookie("userAuth", "allBad");
     	if (name != null) {
     		response.getWriter().println(PageGenerator.getPage(httpSession, sessionIdToSession.get(httpSession)));
     	} else {
@@ -149,7 +144,7 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 	
 	
 	public void setUserId(String userName, Integer userId) {
-		sessionIdToSession.get(httpSession).setUserSession(userName, userId);
+		sessionIdToSession.get(httpSession).setUser(userName, userId);
 	}
 	
 	public MessageSystem getMessageSystem() {

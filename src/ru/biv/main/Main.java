@@ -11,6 +11,7 @@ import ru.biv.accountService.AccountServiceImpl;
 import ru.biv.base.*;
 import ru.biv.frontend.FrontendImpl;
 import ru.biv.frontend.FrontendObject;
+import ru.biv.gameMechanic.GameMechanicImpl;
 import ru.biv.msgSystem.*;
 
 /**
@@ -24,9 +25,11 @@ public class Main {
 		
 		Frontend frontend = new FrontendObject(ms);
 		AccountService accountService = new AccountServiceImpl(ms);
+		GameMechanic gameMechanic = new GameMechanicImpl(ms);
 		
 		new Thread((Runnable) frontend).start();
 		new Thread((Runnable) accountService).start();
+		new Thread((Runnable) gameMechanic).start();
 		
 		Server server = new Server(8080);
 		server.setHandler(frontend.getHandlers());

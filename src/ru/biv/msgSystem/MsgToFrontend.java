@@ -10,7 +10,7 @@ import ru.biv.base.Msg;
 
 
 /**
- * @author Banshikov Igor (BIV)
+ * @author Banchikov Igor (BIV)
  *
  */
 public abstract class MsgToFrontend extends Msg {

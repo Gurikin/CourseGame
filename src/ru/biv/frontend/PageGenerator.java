@@ -51,7 +51,7 @@ public class PageGenerator {
     	if (userSession.getAuth() == "AUTH") {
     		response = "User name: " + userSession.getUserName() + " Id: " + userSession.getUserId(userSession.getUserName()) + " SessionId: " + httpSession.getId();
     	} 
-    	if (userSession.getAuth() == "AUTHORIZATING") {
+    	if (userSession.getAuth() == "AUTHORIZATION") {
     		response = "Авторизация уже на подходе. Your SessionId: " + httpSession.getId();
     	} 
     	return response;

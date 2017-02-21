@@ -5,15 +5,21 @@ import java.util.*;
 import java.util.Map.Entry;
 
 //@SuppressWarnings("serial")
+@SuppressWarnings("serial")
 public class UserSession implements Serializable{
 	private Map<String, Integer> user = new HashMap<String, Integer>();
-	private enum auth {AUTHORIZATING, AUTH, DONT_AUTH, START};
+	private String enemyName;
+	private int[] currentStep = new int[2];
+	private int numStepsUser;
+	private int numStepsEnemy;
+	private enum stone {BLACK, WHITE};
+	private enum auth {AUTHORIZATION, AUTH, DONT_AUTH};
 		
 	public UserSession() {
 		userClear();
 	}
 	
-	public void setUserSession(String userName, Integer userId) {
+	public void setUser(String userName, Integer userId) {
 		userClear();
 		user.put(userName, userId);
 	}
@@ -39,7 +45,7 @@ public class UserSession implements Serializable{
 			return "";
 		}
 		if (this.user.get(this.getUserName()) == null) {
-			return auth.AUTHORIZATING.toString(); 
+			return auth.AUTHORIZATION.toString(); 
 		}
 		if (this.user.get(this.getUserName()) == 0) {
 			return auth.DONT_AUTH.toString(); 

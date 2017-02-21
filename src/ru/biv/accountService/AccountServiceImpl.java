@@ -29,16 +29,17 @@ public class AccountServiceImpl implements Runnable, Abonent, AccountService{
 		this.ms = ms;
 		this.address = new Address();
 		ms.addService(this);
-		this.takeAccounter.put("Garry", 1);
-		this.takeAccounter.put("Molly", 2);
+		this.takeAccounter.put("r", 1);
+		this.takeAccounter.put("ger", 2);
 		this.takeAccounter.put("g", 3);
+		this.takeAccounter.put("m", 4);
 	}
 	
 	@Override
 	public void run() {
 		while (true) {
 			ms.execForAbonent(this);
-			TimeHelper.sleep(5000);
+			TimeHelper.sleep(100);
 		}
 	}
 	
