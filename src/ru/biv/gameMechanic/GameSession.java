@@ -13,7 +13,8 @@ public class GameSession {
 	private long durationTime;
 	private enum stone {BLACK, WHITE};
 	private Integer currentStepUserId;
-	private Map<Integer, Integer[]> field = new HashMap<Integer, Integer[]>();
+	private double[] currentStep = new double[2];
+	private Map<Integer, double[]> field = new HashMap<Integer, double[]>();
 	private Integer gameSessionStatus = null;
 	
 	public GameSession(UserSession userSession1, UserSession userSession2) {
@@ -54,13 +55,23 @@ public class GameSession {
 	
 	public UserSession updateUserSession(UserSession userSession) {
 		userSession.setPartyDurationTime(getDurationTime()/1000);
-		userSession.setLastStep(checkCurrentStep(userSession.getLastStep(), 
-				userSession.getUserId(userSession.getUserName())));
-		if (userSession.equals(userSession1)) {			
+		currentStep = checkCurrentStep(userSession.getLastStep(), 
+				userSession.getUserId(userSession.getUserName()));//currentStepUserId);//
+		userSession.setLastStep(currentStep);
+		System.out.println(currentStep);
+		if (userSession.equals(userSession1)) {
+			/*if (currentStep != null) {
+				userSession.setLastStep(currentStep);
+				currentStepUserId = userSession2.getUserId(userSession2.getUserName());
+			}*/
 			this.userSession1 = userSession;
 			this.userSession1.setEnemyName(this.userSession2.getUserName());
 			this.userSession1.setNumStepsEnemy(this.userSession2.getNumStepsUser());
 		} else {
+			/*if (currentStep != null) {
+				userSession.setLastStep(currentStep);
+				currentStepUserId = userSession1.getUserId(userSession1.getUserName());
+			}*/
 			this.userSession2 = userSession;
 			this.userSession2.setEnemyName(this.userSession1.getUserName());
 			this.userSession2.setNumStepsEnemy(this.userSession1.getNumStepsUser());
@@ -76,7 +87,7 @@ public class GameSession {
 		this.gameSessionStatus = gameSessionStatus;
 	}
 	
-	private Integer[] checkCurrentStep(Integer[] checkingStep, Integer currentStepUserId) {
+	private double[] checkCurrentStep(double[] checkingStep, Integer currentStepUserId) {
 		if (!this.field.containsValue(checkingStep) && currentStepUserId.equals(this.currentStepUserId)) {
 			return checkingStep;
 		}

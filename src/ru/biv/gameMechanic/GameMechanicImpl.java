@@ -58,7 +58,7 @@ public class GameMechanicImpl implements Runnable, Abonent, GameMechanic {
 	@Override
 	public void updateGameSession(UserSession userSession) {
 		Integer userId = userSession.getUserId(userSession.getUserName());
-		System.out.println(userSession.getUserName()+"\t"+userSession.getUserId(userSession.getUserName()));
+		//System.out.println(userSession.getUserName()+"\t"+userSession.getUserId(userSession.getUserName()));
 		if (!userToSession.containsKey(userId)) {
 			startGameSession(userSession);
 		} else {
