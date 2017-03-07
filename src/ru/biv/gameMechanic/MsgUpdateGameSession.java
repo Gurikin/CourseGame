@@ -11,23 +11,23 @@ import ru.biv.msgSystem.*;
  * @author Banchikov Igor (BIV)
  *
  */
-public class MsgStartGameSession extends MsgToGM {
+public class MsgUpdateGameSession extends MsgToGM {
 
 	//int userId1, userId2;
-	int userId;
+	UserSession userSession;
 	
 	/**
 	 * @param from
 	 * @param to
 	 */
-	public MsgStartGameSession(Address from, Address to, int userId) {
+	public MsgUpdateGameSession(Address from, Address to, UserSession userSession) {
 		super(from, to);
-		this.userId = userId;
+		this.userSession = userSession;
 	}
 
 	@Override
 	public void exec(GameMechanic gameMechanic) {
-		gameMechanic.createGameSession(this.userId);
+		gameMechanic.updateGameSession(this.userSession);
 		//System.out.println("FROM\t\t"+this.getClass()+"\t\tEXEC.");
 		//Integer gameSessionId = gameMechanic.createGameSession(this.userId1, this.userId2);
 		//gameMechanic.startGameSession(gameSessionId);

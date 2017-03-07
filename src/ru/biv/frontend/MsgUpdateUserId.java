@@ -24,7 +24,7 @@ public class MsgUpdateUserId extends MsgToFrontend {
 	}
 	
 	/* (non-Javadoc)
-	 * @see ru.biv.msgSystem.MsgToFrontend#exec(ru.biv.html.Frontend)
+	 * @see ru.biv.msgSystem.MsgToFrontend#exec(ru.biv.frontend.Frontend)
 	 */
 	@Override
 	public void exec(Frontend frontend) {

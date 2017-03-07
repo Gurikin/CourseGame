@@ -150,4 +150,10 @@ public class FrontendImpl extends AbstractHandler implements Runnable, Abonent, 
 	public MessageSystem getMessageSystem() {
 		return ms;
 	}
+
+	@Override
+	public void updateUserSession(UserSession userSession) {
+		// TODO Auto-generated method stub
+		
+	}
 }

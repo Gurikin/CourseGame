@@ -27,11 +27,11 @@ import ru.biv.utils.TimeHelper;
 import ru.biv.accountService.AccountServiceImpl;
 import ru.biv.base.*;
 import ru.biv.gameMechanic.GameMechanicImpl;
-import ru.biv.gameMechanic.MsgStartGameSession;
+import ru.biv.gameMechanic.MsgUpdateGameSession;
 
 
 /**
- * @author Banchikov Igor Vladimirovich
+ * @author Banchikov Igor Vladimirovich (BIV)
  *
  */
 public class FrontendObject extends AbstractHandler implements Runnable, Abonent, Frontend {
@@ -79,7 +79,7 @@ public class FrontendObject extends AbstractHandler implements Runnable, Abonent
 	public void run() {
 		while(true) {
 			ms.execForAbonent(this);
-			TimeHelper.sleep(1000);
+			TimeHelper.sleep(30);
 		}			
 	}
 	
@@ -128,24 +128,24 @@ public class FrontendObject extends AbstractHandler implements Runnable, Abonent
     if (cookies != null) {
     	for (Cookie cookie : cookies) {
       	if (cookie != null) {
-      		System.out.print(cookie.getName().toString()+"\t");
-      		System.out.println(cookie.getValue().toString());
+      		//System.out.print(cookie.getName().toString()+"\t");
+      		//System.out.println(cookie.getValue().toString());
       	}    	
       }
     }   
 
     Integer id = null;
     String name = requestUserSession.getUserName();
-    System.out.println("Имя: "+name+"    ");
+    //System.out.println("Имя: "+name+"\t");
     if (name != null) {
     	id = sessionIdToSession.get(httpSession).getUserId(name);
-    	System.out.println("userId: "+id);
+    	//System.out.println("userId: "+id);
     }
     sessionIdToSession.get(httpSession).setUser(name, id);
     objectOutputStream = new ObjectOutputStream(response.getOutputStream());        
     if (id != null) {
     	Address addressGM = ms.getAddressService().getAddress(GameMechanicImpl.class);
-    	ms.sendMessage(new MsgStartGameSession(getAddress(), addressGM, id));
+    	ms.sendMessage(new MsgUpdateGameSession(getAddress(), addressGM, sessionIdToSession.get(httpSession)));
     	objectOutputStream.writeObject(sessionIdToSession.get(httpSession));
     	objectOutputStream.flush();
     	objectOutputStream.close();
@@ -160,6 +160,10 @@ public class FrontendObject extends AbstractHandler implements Runnable, Abonent
 	
 	public void setUserId(String userName, Integer userId) {
 		sessionIdToSession.get(httpSession).setUser(userName, userId);
+	}
+	
+	public void updateUserSession(UserSession userSession) {
+		sessionIdToSession.put(httpSession, userSession);
 	}
 	
 	public MessageSystem getMessageSystem() {
