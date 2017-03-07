@@ -11,7 +11,7 @@ public class UserSession implements Serializable{
     private String enemyName;
     private Integer numStepsUser;
     private Integer numStepsEnemy;
-    private int[] lastStep = new int[2];
+    private Integer[] lastStep = new Integer[2];
     private long partyDurationTime;
     private Integer partyStatus;
 
@@ -132,7 +132,15 @@ public class UserSession implements Serializable{
         this.numStepsEnemy = numStepsEnemy;
     }
 
-    /**
+    public Integer[] getLastStep() {
+		return lastStep;
+	}
+
+	public void setLastStep(Integer[] lastStep) {
+		this.lastStep = lastStep;
+	}
+
+	/**
      * @return the partyDurationTime
      */
     public long getPartyDurationTime() {

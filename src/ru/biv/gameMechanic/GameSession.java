@@ -1,6 +1,8 @@
 package ru.biv.gameMechanic;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import ru.biv.msgSystem.UserSession;
 
@@ -11,8 +13,7 @@ public class GameSession {
 	private long durationTime;
 	private enum stone {BLACK, WHITE};
 	private Integer currentStepUserId;
-	private Integer[] currentStep = new Integer[2];
-	private Integer[][] field;
+	private Map<Integer, Integer[]> field = new HashMap<Integer, Integer[]>();
 	private Integer gameSessionStatus = null;
 	
 	public GameSession(UserSession userSession1, UserSession userSession2) {
@@ -24,7 +25,7 @@ public class GameSession {
 		userSession2.setStone(stone.BLACK.toString());
 		this.userSession1 = userSession1;
 		this.userSession2 = userSession2;
-		this.field = new Integer[10][10];
+		this.currentStepUserId = userSession2.getUserId(userSession2.getUserName());
 	}
 	
 	public long getDurationTime() {
@@ -50,22 +51,12 @@ public class GameSession {
 			return userSession2;
 		}	
 	}
-
-	/**
-	 * @param userSession1 the userSession1 to set
-	 * @param userSession2 the userSession2 to set
-	 */
-	public void setUserSession(UserSession userSession) {
-		if (userSession.equals(userSession1)) {
-			this.userSession1 = userSession;
-		} else {
-			this.userSession2 = userSession;
-		}
-	}
 	
 	public UserSession updateUserSession(UserSession userSession) {
 		userSession.setPartyDurationTime(getDurationTime()/1000);
-		if (userSession.equals(userSession1)) {
+		userSession.setLastStep(checkCurrentStep(userSession.getLastStep(), 
+				userSession.getUserId(userSession.getUserName())));
+		if (userSession.equals(userSession1)) {			
 			this.userSession1 = userSession;
 			this.userSession1.setEnemyName(this.userSession2.getUserName());
 			this.userSession1.setNumStepsEnemy(this.userSession2.getNumStepsUser());
@@ -83,5 +74,12 @@ public class GameSession {
 
 	public void setGameSessionStatus(Integer gameSessionStatus) {
 		this.gameSessionStatus = gameSessionStatus;
+	}
+	
+	private Integer[] checkCurrentStep(Integer[] checkingStep, Integer currentStepUserId) {
+		if (!this.field.containsValue(checkingStep) && currentStepUserId.equals(this.currentStepUserId)) {
+			return checkingStep;
+		}
+		return null;
 	}
 }

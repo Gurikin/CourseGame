@@ -70,7 +70,7 @@ public class GameMechanicImpl implements Runnable, Abonent, GameMechanic {
 					gameSession.setDurationTime(durationTime);
 					gameSession.updateUserSession(userSession);
 				}
-		}				
+		}
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class GameMechanicImpl implements Runnable, Abonent, GameMechanic {
 					userToSession.put(userSessionSecond.getUserId(userSessionSecond.getUserName()), gameSession);
 					userSessionFirst = null;
 					userSessionSecond = null;
-				}				
+				}
 			}
 		}
 	}
